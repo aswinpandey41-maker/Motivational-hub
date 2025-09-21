@@ -4,87 +4,116 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MotivateHub - Daily Quotes</title>
+  <title>Resume Generator with PDF</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #111;
-      color: #fff;
+      padding: 0;
     }
-
-    header {
-      background: #ff5722;
-      padding: 20px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 30px;
-    }
-
     .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: white;
       padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
     }
-
-    .quote-box {
-      background: #1e1e1e;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-left: 5px solid #ff5722;
-[20/09, 20:17] Chat Gpt: box-shadow: 0 0 10px rgba(255,87,34,0.4);
-    }
-
-    .quote-box p {
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    .quote-box span {
-      display: block;
-      margin-top: 10px;
-      text-align: right;
-      font-style: italic;
-      color: #aaa;
-    }
-
-    footer {
-      background: #222;
+    h2 {
       text-align: center;
-      padding: 15px;
+      color: #4facfe;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+[21/09, 07:38] Chat Gpt: button {
+      background: #4facfe;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      margin-top: 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+    }
+    button:hover {
+      background: #00c6ff;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
       font-size: 14px;
-      color: #ccc;
+      color: #555;
     }
   </style>
 </head>
 <body>
-
-  <header>
-    <h1>MotivateHub</h1>
-    <p>Daily Dose of Motivation</p>
-  </header>
-
   <div class="container">
-    <div class="quote-box">
-      <p>"Success doesn’t come from what you do occasionally, it comes from what you do consistently."</p>
-      <span>- Marie Forleo</span>
-    </div>
+    <h2>Generate Your Resume</h2>
+    <form id="resumeForm">
+      <label>Full Name</label>
+      <input type="text" id="name" required />
 
-    <div class="quote-box">
-      <p>"Don’t watch the clock; do what it does. Keep going."</p>
-      <span>- Sam Levenson</span>
-    </div>
+      <label>Email Address</label>
+      <input type="email" id="email" required />
 
-    <div class="quote-box">
-      <p>"Believe in yourself. You are braver than you think and stronger than you seem."</p>
-      <span>- Unknown</span>
-    </div>
+      <label>Education</label>
+      <textarea rows="3" id="education"></textarea>
+
+      <label>Experience</label>
+      <textarea rows="3" id="experience"></textarea>
+
+      <label>Skills</label>
+      <textarea rows="2" id="skills"></textarea>
+
+      <button type="button" onclick="generatePDF()">Generate Resume</button>
+    </form>
+    <div class="footer">© 2025 ResumeHub | Made for you ❤️</div>
   </div>
 
-  <footer>
-    © 2025 MotivateHub | Powered by Positivity
-  </footer>
+  <!-- Hidden template for PDF -->
+  <div id="pdf-content" style="display:none;">
+    <h2 style="text-align:center;">Resume</h2>
+    <p><strong>Name:</strong> <span id="pdf-name"></span></p>
+[21/09, 07:38] Chat Gpt: <p><strong>Email:</strong> <span id="pdf-email"></span></p>
+    <p><strong>Education:</strong><br><span id="pdf-education"></span></p>
+    <p><strong>Experience:</strong><br><span id="pdf-experience"></span></p>
+    <p><strong>Skills:</strong><br><span id="pdf-skills"></span></p>
+  </div>
 
+  <script>
+    function generatePDF() {
+      document.getElementById("pdf-name").innerText = document.getElementById("name").value;
+      document.getElementById("pdf-email").innerText = document.getElementById("email").value;
+      document.getElementById("pdf-education").innerText = document.getElementById("education").value;
+      document.getElementById("pdf-experience").innerText = document.getElementById("experience").value;
+      document.getElementById("pdf-skills").innerText = document.getElementById("skills").value;
+
+      const element = document.getElementById("pdf-content");
+      element.style.display = 'block';
+
+      html2pdf().from(element).set({
+        margin: 1,
+        filename: 'Resume.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      }).save().then(() => {
+        element.style.display = 'none';
+      });
+    }
+  </script>
 </body>
 </html>
+
